@@ -6,6 +6,9 @@ name = "pypi"
 [packages]
 sqlalchemy = "*"
 psycopg2-binary = "*"
+httpx = "*"
+beautifulsoup4 = "*"
+lxml = "*"
 
 [dev-packages]
 flake8 = "*"
