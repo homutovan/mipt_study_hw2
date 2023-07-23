@@ -1,9 +1,19 @@
+<p align="left">
+   <img src="https://img.shields.io/badge/python-3.10-green" alt="Python Version">
+   <img src="https://img.shields.io/badge/Licence-MIT-blueviolet" alt="License">
+</p>
+
 # Домашняя работа № 2. Python для сетевого программирования
+
+## Системные требования
+* Python >= 3.10
+* Docker-compose >= 1.29.2
 
 ## Установка
 * docker-compose up 
 * pip install pipenv
-* pipenv install
+* pipenv install `(пакеты для запуска)`
+* pipenv install --dev `(пакеты для разработки)`
 
 ## Запуск
 * pipenv shell
