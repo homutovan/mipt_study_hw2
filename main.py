@@ -46,8 +46,8 @@ if __name__ == '__main__':
         try:
 
             controller = init()
-            # task_1(query, controller)
-            # task_2(query, controller)
+            task_1(query, controller)
+            task_2(query, controller)
             asyncio.run(async_task_2(query, controller))
 
         except KeyboardInterrupt:
