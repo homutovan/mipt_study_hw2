@@ -1,13 +1,14 @@
-import httpx
 from typing import Dict, Generator
+
+import httpx
 from tqdm import tqdm
 
-from settings import (
-    ITEMS_COUNT, SOURCE_URL, SESSION_HEADERS, VERBOSE,
-)
-
 from parsers import VacancySearchPage
+from settings import (
+    ITEMS_COUNT, SESSION_HEADERS, SOURCE_URL, VERBOSE,
+)
 from utils import get_logger
+
 
 logger = get_logger(__name__)
 
@@ -37,7 +38,7 @@ def scrap_on_query(query: str) -> Generator[Dict[str, str], None, None]:
 
                 if resp.is_error:
                     break
-                
+
                 vacancy_page = VacancySearchPage(resp.content.decode(), client)
                 pbar.total = vacancy_page.count
 
@@ -47,4 +48,4 @@ def scrap_on_query(query: str) -> Generator[Dict[str, str], None, None]:
 
                 page += 1
 
-    tqdm.write('data reading completed')        
+    logger.info('data reading completed')

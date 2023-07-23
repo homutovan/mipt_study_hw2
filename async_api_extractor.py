@@ -1,17 +1,18 @@
 import asyncio
+from typing import Dict, Generator
+
 import httpx
 from tqdm import tqdm
+
+from settings import API_URL, RETRY, SESSION_HEADERS, TIMEOUT, VERBOSE
 from validators import ResponseModel, VacancyModel
-from typing import Generator, Dict
-
-from settings import API_URL, SESSION_HEADERS, TIMEOUT, RETRY, VERBOSE
 
 
-async def extract_vacancy(id: str, client: httpx.Client) -> Dict[str, str]:
+async def extract_vacancy(_id: str, client: httpx.Client) -> Dict[str, str]:
     retry = RETRY
     result = None
     while retry:
-        response = await client.get(API_URL + id)
+        response = await client.get(API_URL + _id)
 
         if response.is_error:
             await asyncio.sleep(TIMEOUT)
@@ -21,11 +22,13 @@ async def extract_vacancy(id: str, client: httpx.Client) -> Dict[str, str]:
         else:
             result = response.json()
             break
-    
+
     return result
 
 
-async def async_api_extractor(query: str) -> Generator[Dict[str, str], None, None]:
+async def async_api_extractor(
+        query: str,
+        ) -> Generator[Dict[str, str], None, None]:
 
     async with httpx.AsyncClient(headers=SESSION_HEADERS) as client:
         with tqdm(colour='red', unit='page', disable=not VERBOSE) as pbar:
@@ -50,5 +53,5 @@ async def async_api_extractor(query: str) -> Generator[Dict[str, str], None, Non
                     if result:
                         yield VacancyModel(**result).model_dump()
 
-                page +=1
+                page += 1
                 pbar.update(1)

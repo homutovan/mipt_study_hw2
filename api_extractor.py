@@ -1,17 +1,18 @@
+import time
+from typing import Dict, Generator
+
 import httpx
 from tqdm import tqdm
-import time
+
 from validators import ResponseModel, VacancyModel
-from typing import Generator, Dict
-
-from settings import API_URL, SESSION_HEADERS, TIMEOUT, RETRY, VERBOSE
+from settings import API_URL, RETRY, SESSION_HEADERS, TIMEOUT, VERBOSE
 
 
-def extract_vacancy(id: str, client: httpx.Client) -> Dict[str, str]:
+def extract_vacancy(_id: str, client: httpx.Client) -> Dict[str, str]:
     retry = RETRY
     result = None
     while retry:
-        response = client.get(API_URL + id)
+        response = client.get(API_URL + _id)
 
         if response.is_error:
             time.sleep(TIMEOUT)
@@ -21,7 +22,7 @@ def extract_vacancy(id: str, client: httpx.Client) -> Dict[str, str]:
         else:
             result = response.json()
             break
-    
+
     return result
 
 
@@ -50,5 +51,5 @@ def api_extractor(query: str) -> Generator[Dict[str, str], None, None]:
                     if result:
                         yield VacancyModel(**result).model_dump()
 
-                page +=1
+                page += 1
                 pbar.update(1)

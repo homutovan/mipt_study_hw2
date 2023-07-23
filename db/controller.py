@@ -3,10 +3,8 @@ from typing import Dict, List
 from sqlalchemy import create_engine
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.orm import sessionmaker
-# from sqlalchemy.orm.state import InstanceState
-# from sqlalchemy.dialects.postgresql import insert
 
-from db.models import Base, Company, Vacancy, Skill
+from db.models import Base, Company, Skill, Vacancy
 from settings import THRESHOLD
 from utils import get_logger
 
@@ -42,6 +40,7 @@ class Driver:
             with self.session_factory() as session:
                 session.add_all(data)
                 session.commit()
+
             return True
         except SQLAlchemyError as e:
             self.logger.error(e)
@@ -57,16 +56,20 @@ class Controller(Driver):
     """
     """
 
-    def add_company(self,
-                    data: List[Dict[str, str]],
-                    commit=True) -> bool:
+    def add_company(
+            self,
+            data: List[Dict[str, str]],
+            commit=True,
+            ) -> bool:
         return self.add_data(list(map(
             lambda x: Company(**x), data)), commit=commit,
             )
-    
-    def add_vacancy(self,
-                    data: List[Dict[str, str]],
-                    commit=True) -> bool:
+
+    def add_vacancy(
+            self,
+            data: List[Dict[str, str]],
+            commit=True,
+            ) -> bool:
         return self.add_data([
             Vacancy(
                 company_name=item['company_name'],
@@ -74,16 +77,18 @@ class Controller(Driver):
                 job_description=item['job_description'],
                 key_skills=[
                     Skill(
-                        name=skill_item['name']
+                        name=skill_item['name'],
                     ) for skill_item in item['key_skills']
                 ],
             ) for item in data
         ], commit=commit,
             )
-    
-    def add_skill(self,
-                    data: List[Dict[str, str]],
-                    commit=True) -> bool:
+
+    def add_skill(
+            self,
+            data: List[Dict[str, str]],
+            commit=True,
+            ) -> bool:
         return self.add_data(list(map(
             lambda x: Skill(**x), data)), commit=commit,
             )

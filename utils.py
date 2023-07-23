@@ -1,6 +1,7 @@
 import os
 import sys
-from logging import DEBUG, NullHandler, StreamHandler, basicConfig, getLogger, Logger
+from logging import (DEBUG, Logger, NullHandler,
+                     StreamHandler, basicConfig, getLogger)
 from logging.handlers import RotatingFileHandler
 
 from settings import VERBOSE, log_file, log_path

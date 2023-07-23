@@ -1,14 +1,15 @@
 import asyncio
-from tqdm.contrib.logging import logging_redirect_tqdm
-from typing import Generator, Callable
+from typing import Callable, Generator
 
-from db.controller import Controller
-from settings import DB_URI, VERBOSE
-from scraper import scrap_on_query
+from tqdm.contrib.logging import logging_redirect_tqdm
+
 from api_extractor import api_extractor
 from async_api_extractor import async_api_extractor
-from validators import Vacancy, Company
+from db.controller import Controller
+from scraper import scrap_on_query
+from settings import DB_URI, VERBOSE
 from utils import get_logger
+from validators import Company, Vacancy
 
 
 def init() -> Controller:
@@ -25,6 +26,7 @@ def task(generator: Generator) -> Callable:
             controller.add_vacancy([Vacancy(**item).model_dump()])
 
     return task_by_gen
+
 
 async def async_task_2(query: str, controller: Controller):
     async for item in async_api_extractor(query):
@@ -55,4 +57,3 @@ if __name__ == '__main__':
 
         finally:
             logger.info('execution stopped')
-
