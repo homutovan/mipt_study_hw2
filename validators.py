@@ -1,7 +1,7 @@
-from pydantic import BaseModel, Field, field_validator
-from typing import Dict, List
+from typing import List
 
-from bs4 import BeautifulSoup as bs
+from bs4 import BeautifulSoup as Soup
+from pydantic import BaseModel, Field, field_validator
 
 
 class Company(BaseModel):
@@ -15,6 +15,7 @@ class Skill(BaseModel):
     """
 
     name: str
+
 
 class Vacancy(BaseModel):
     """
@@ -53,11 +54,8 @@ class VacancyModel(BaseModel):
 
     @field_validator('job_description')
     def delete_markup(cls, value):
-        return bs(value, 'lxml').getText()
-    
+        return Soup(value, 'lxml').getText()
 
     def __init__(self, **kwargs):
         kwargs['company_name'] = kwargs['employer']['name']
         super().__init__(**kwargs)
-
-
