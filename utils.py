@@ -1,12 +1,12 @@
 import os
 import sys
-from logging import DEBUG, NullHandler, StreamHandler, basicConfig, getLogger
+from logging import DEBUG, NullHandler, StreamHandler, basicConfig, getLogger, Logger
 from logging.handlers import RotatingFileHandler
 
 from settings import VERBOSE, log_file, log_path
 
 
-def get_logger(name):
+def get_logger(name: str) -> Logger:
     """
     """
     if log_file:

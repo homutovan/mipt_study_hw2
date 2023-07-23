@@ -3,6 +3,8 @@ from typing import Dict, List
 from sqlalchemy import create_engine
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.orm import sessionmaker
+# from sqlalchemy.orm.state import InstanceState
+# from sqlalchemy.dialects.postgresql import insert
 
 from db.models import Base, Company, Vacancy, Skill
 from settings import THRESHOLD
@@ -40,7 +42,6 @@ class Driver:
             with self.session_factory() as session:
                 session.add_all(data)
                 session.commit()
-
             return True
         except SQLAlchemyError as e:
             self.logger.error(e)
@@ -63,15 +64,24 @@ class Controller(Driver):
             lambda x: Company(**x), data)), commit=commit,
             )
     
-
     def add_vacancy(self,
                     data: List[Dict[str, str]],
                     commit=True) -> bool:
-        return self.add_data(list(map(
-            lambda x: Vacancy(**x), data)), commit=commit,
+        return self.add_data([
+            Vacancy(
+                company_name=item['company_name'],
+                position=item['position'],
+                job_description=item['job_description'],
+                key_skills=[
+                    Skill(
+                        name=skill_item['name']
+                    ) for skill_item in item['key_skills']
+                ],
+            ) for item in data
+        ], commit=commit,
             )
     
-    def add_scill(self,
+    def add_skill(self,
                     data: List[Dict[str, str]],
                     commit=True) -> bool:
         return self.add_data(list(map(
