@@ -1,0 +1,12 @@
+[flake8]
+exclude = .git,__pycache__,docs/source/conf.py,old,build,dist
+max-complexity = 10
+import-order-style = pep8
+per-file-ignores =
+    ./db/controller.py:I202
+    ./validators.py:A003,N805
+    ./api_extractor.py:I202
+    ./async_api_extractor.py:I202
+    ./main.py:I202
+    ./parsers.py:I202
+    ./scraper.py:I202
